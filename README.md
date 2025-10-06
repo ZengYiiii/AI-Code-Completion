@@ -230,7 +230,7 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 
 如有问题或建议，请通过以下方式联系：
 
-- 🐛 **GitHub Issues**: [提交问题](https://github.com/your-repo/issues)
+- 🐛 **GitHub Issues**: [提交问题](https://github.com/ZengYiiii/AI-Code-Completion/issues)
 - 📧 **邮箱**: [插件反馈](mailto:feedback@example.com)
 
 ---
