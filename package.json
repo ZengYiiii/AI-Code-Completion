@@ -1,0 +1,240 @@
+{
+  "name": "vscode-ai-completion",
+  "displayName": "AI Code Completion",
+  "description": "智能代码补全插件，基于AI大模型提供实时代码建议",
+  "version": "1.0.0",
+  "publisher": "ZengYiiii",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Snippets",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "ai",
+    "completion",
+    "code",
+    "intelligence",
+    "glm",
+    "copilot"
+  ],
+  "activationEvents": [
+    "onLanguage:*"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "AI Code Completion",
+      "properties": {
+        "aiCompletion.apiKey": {
+          "type": "string",
+          "default": "你的API Key:https://bigmodel.cn/usercenter/proj-mgmt/apikeys",
+          "description": "AI大模型API密钥",
+          "scope": "application"
+        },
+        "aiCompletion.baseUrl": {
+          "type": "string",
+          "default": "https://open.bigmodel.cn/api/coding/paas/v4",
+          "description": "AI大模型Base URL (推荐: https://open.bigmodel.cn/api/coding/paas/v4)",
+          "scope": "application"
+        },
+        "aiCompletion.model": {
+          "type": "string",
+          "default": "glm-4.6",
+          "enum": ["glm-4.6", "glm-4.5-air"],
+          "description": "使用的AI模型",
+          "scope": "application"
+        },
+        "aiCompletion.maxTokens": {
+          "type": "number",
+          "default": 1024,
+          "description": "最大生成Token数",
+          "scope": "application"
+        },
+        "aiCompletion.temperature": {
+          "type": "number",
+          "default": 0.3,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "生成温度参数",
+          "scope": "application"
+        },
+        "aiCompletion.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用AI代码补全",
+          "scope": "application"
+        },
+        "aiCompletion.delay": {
+          "type": "number",
+          "default": 500,
+          "description": "输入延迟(ms)，避免频繁调用API",
+          "scope": "application"
+        },
+        "aiCompletion.autoAccept": {
+          "type": "boolean",
+          "default": false,
+          "description": "自动接受第一个补全建议",
+          "scope": "application"
+        },
+        "aiCompletion.showInlineHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "显示内联补全提示",
+          "scope": "application"
+        },
+        "aiCompletion.cacheEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用补全结果缓存",
+          "scope": "application"
+        },
+        "aiCompletion.logLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": ["none", "error", "warn", "info", "debug"],
+          "description": "日志输出级别",
+          "scope": "application"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "aiCompletion.toggle",
+        "title": "切换AI补全状态",
+        "category": "AI Completion"
+      },
+      {
+        "command": "aiCompletion.resetStats",
+        "title": "重置Token统计",
+        "category": "AI Completion"
+      },
+      {
+        "command": "aiCompletion.showStats",
+        "title": "显示Token统计",
+        "category": "AI Completion"
+      },
+      {
+        "command": "aiCompletion.testConnection",
+        "title": "测试AI服务连接",
+        "category": "AI Completion"
+      },
+      {
+        "command": "aiCompletion.fullTest",
+        "title": "完整API测试",
+        "category": "AI Completion"
+      },
+      {
+        "command": "aiCompletion.showLogs",
+        "title": "显示插件日志",
+        "category": "AI Completion"
+      },
+      {
+        "command": "aiCompletion.configure",
+        "title": "配置插件设置",
+        "category": "AI Completion"
+      },
+      {
+        "command": "aiCompletion.resetConfig",
+        "title": "重置配置",
+        "category": "AI Completion"
+      },
+      {
+        "command": "aiCompletion.exportConfig",
+        "title": "导出配置",
+        "category": "AI Completion"
+      },
+      {
+        "command": "aiCompletion.importConfig",
+        "title": "导入配置",
+        "category": "AI Completion"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "aiCompletion.toggle",
+        "key": "ctrl+alt+a",
+        "mac": "cmd+alt+a"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "aiCompletion.toggle",
+          "when": "true"
+        },
+        {
+          "command": "aiCompletion.resetStats",
+          "when": "true"
+        },
+        {
+          "command": "aiCompletion.showStats",
+          "when": "true"
+        },
+        {
+          "command": "aiCompletion.testConnection",
+          "when": "true"
+        },
+        {
+          "command": "aiCompletion.fullTest",
+          "when": "true"
+        },
+        {
+          "command": "aiCompletion.showLogs",
+          "when": "true"
+        },
+        {
+          "command": "aiCompletion.configure",
+          "when": "true"
+        },
+        {
+          "command": "aiCompletion.resetConfig",
+          "when": "true"
+        },
+        {
+          "command": "aiCompletion.exportConfig",
+          "when": "true"
+        },
+        {
+          "command": "aiCompletion.importConfig",
+          "when": "true"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "build": "npm run clean && npm run compile",
+    "clean": "if exist out rmdir /s /q out",
+    "package": "vsce package",
+    "build-package": "npm run build && vsce package",
+    "dev": "npm run compile && npm run watch"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZengYiiii/vscode-ai-completion.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ZengYiiii/vscode-ai-completion/issues"
+  },
+  "homepage": "https://github.com/ZengYiiii/vscode-ai-completion#readme"
+}
